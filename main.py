@@ -2,12 +2,13 @@
 import urllib2, urllib
 import time, os
 from datetime import datetime
+import subprocess
 import RPi.GPIO as GPIO
 import picamera
 import local_settings as l
 
 
-SNAPSHOT_DIR = os.path.join(CURRENT_PATH,'/static/images')
+SNAPSHOT_DIR = os.path.join(CURRENT_PATH,'/images')
 
 def __main__():
     url = 'https://api.pushover.net/1/messages.json'
@@ -18,12 +19,16 @@ def __main__():
 
 def action_callback(channel):
     print("Button pressed")
+    data = l.data
     filename = snap()
+    cmds = ['/usr/local/bin/s3cmd', '-c', '/home/pi/.s3cfg', '--no-progress', 'sync','{}/*.jpg'.format(SNAPSHOT_DIR),'s3://www.zemogle.uk/doorbell/']
+    subprocess.call(cmds)
     img_url = "http://www.zemogle.uk/doorbell/%s" % (filename)
-    l.data['url'] = img_url
-    dataenc = urllib.urlencode(l.data)
+    data['url'] = img_url
+    dataenc = urllib.urlencode(data)
     content = urllib2.urlopen(url=url, data=dataenc).read()
     print("Button Released")
+    return 
 
 def snap():
     filename = "image-%s.jpg" % datetime.strftime(datetime.now(),"%Y-%m-%dT%H:%M:%S")
