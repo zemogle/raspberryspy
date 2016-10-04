@@ -8,25 +8,26 @@ import picamera
 import local_settings as l
 
 
-SNAPSHOT_DIR = os.path.join(CURRENT_PATH,'/images')
+SNAPSHOT_DIR = '/home/pi/images'
+PUSH_URL = 'https://api.pushover.net/1/messages.json'
 
-def __main__():
-    url = 'https://api.pushover.net/1/messages.json'
+def init():
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(23, GPIO.IN, pull_up_down = GPIO.PUD_DOWN)
     GPIO.add_event_detect(23, GPIO.RISING)
     GPIO.add_event_callback(23, action_callback)
+    return
 
 def action_callback(channel):
     print("Button pressed")
     data = l.data
     filename = snap()
-    cmds = ['/usr/local/bin/s3cmd', '-c', '/home/pi/.s3cfg', '--no-progress', 'sync','{}/*.jpg'.format(SNAPSHOT_DIR),'s3://www.zemogle.uk/doorbell/']
+    cmds = ['/home/pi/sendimg.sh']
     subprocess.call(cmds)
     img_url = "http://www.zemogle.uk/doorbell/%s" % (filename)
     data['url'] = img_url
     dataenc = urllib.urlencode(data)
-    content = urllib2.urlopen(url=url, data=dataenc).read()
+    content = urllib2.urlopen(url=PUSH_URL, data=dataenc).read()
     print("Button Released")
     return 
 
@@ -42,10 +43,8 @@ def snap():
     camera.capture(SNAPSHOT_DIR +filename)
     return filename
 
-def myip():
-    url = 'http://ipecho.net/plain'
-    f = urllib2.urlopen(url)
-    ip = f.read()
-    return ip
 
-__main__()
+if __name__ == "__main__":
+    init()
+    while True:
+        time.sleep(0.01)
