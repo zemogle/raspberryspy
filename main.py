@@ -7,10 +7,6 @@ import RPi.GPIO as GPIO
 import picamera
 import local_settings as l
 
-
-SNAPSHOT_DIR = '/home/pi/images'
-PUSH_URL = 'https://api.pushover.net/1/messages.json'
-
 def init():
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(23, GPIO.IN, pull_up_down = GPIO.PUD_DOWN)
@@ -27,7 +23,7 @@ def action_callback(channel):
     img_url = "http://www.zemogle.uk/doorbell/%s" % (filename)
     data['url'] = img_url
     dataenc = urllib.urlencode(data)
-    content = urllib2.urlopen(url=PUSH_URL, data=dataenc).read()
+    content = urllib2.urlopen(url=l.PUSH_URL, data=dataenc).read()
     print("Button Released")
     return 
 
@@ -36,11 +32,11 @@ def snap():
     camera = picamera.PiCamera()
     camera.led = False
     camera.resolution = (800,600)
-    #camera.shutter_speed = 20000
+    camera.rotation = 90
     camera.start_preview()
     # Camera warm-up time
     time.sleep(2)
-    camera.capture(SNAPSHOT_DIR +filename)
+    camera.capture(os.path.join(l.IMAGE_DIR,filename))
     return filename
 
 
