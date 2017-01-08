@@ -14,11 +14,9 @@ PUSH_URL = 'https://api.pushover.net/1/messages.json'
 def init():
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(23, GPIO.IN, pull_up_down = GPIO.PUD_DOWN)
-    GPIO.add_event_detect(23, GPIO.RISING)
-    GPIO.add_event_callback(23, action_callback)
     return
 
-def action_callback(channel):
+def action_callback():
     print("Button pressed")
     data = l.data
     filename = snap()
@@ -29,15 +27,15 @@ def action_callback(channel):
     dataenc = urllib.urlencode(data)
     content = urllib2.urlopen(url=PUSH_URL, data=dataenc).read()
     print("Button Released")
-    return 
+    return
 
 def snap():
     filename = "image-%s.jpg" % datetime.strftime(datetime.now(),"%Y-%m-%dT%H:%M:%S")
     camera = picamera.PiCamera()
     camera.led = False
-    camera.resolution = (800,600)
+    camera.resolution = (400,300)
     #camera.shutter_speed = 20000
-    camera.start_preview()
+    # camera.start_preview()
     # Camera warm-up time
     time.sleep(2)
     camera.capture(SNAPSHOT_DIR +filename)
@@ -47,4 +45,6 @@ def snap():
 if __name__ == "__main__":
     init()
     while True:
-        time.sleep(0.01)
+        GPIO.wait_for_edge(23, GPIO.RISING)
+        action_callbakc()
+        GPIO.cleanup()
