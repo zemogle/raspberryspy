@@ -44,5 +44,5 @@ if __name__ == "__main__":
     init()
     while True:
         GPIO.wait_for_edge(23, GPIO.RISING)
-        action_callbakc()
+        action_callback()
         GPIO.cleanup()
