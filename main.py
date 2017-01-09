@@ -6,14 +6,17 @@ import subprocess
 import RPi.GPIO as GPIO
 import picamera
 import local_settings as l
+import telepot
 
 def init():
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(23, GPIO.IN, pull_up_down = GPIO.PUD_DOWN)
-    return
+    bot = telepot.Bot(l.telegram['token'])
+    return bot
 
-def action_callback():
+def action_callback(bot):
     print("Button pressed")
+    bot.sendMessage(l.telegram['to_user_id'], "Doorbell!")
     data = l.data
     filename = snap()
     cmds = ['/home/pi/sendimg.sh']
@@ -41,8 +44,8 @@ def snap():
 
 
 if __name__ == "__main__":
-    init()
+    bot = init()
     while True:
         GPIO.wait_for_edge(23, GPIO.RISING)
-        action_callback()
+        action_callback(bot)
         GPIO.cleanup()
