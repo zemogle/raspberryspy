@@ -1,6 +1,7 @@
 #/usr/bin/python
 import main as m
 import local_settings as l
+import telepot
 
 
 if __name__ == "__main__":
