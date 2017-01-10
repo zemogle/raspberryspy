@@ -5,6 +5,7 @@ import RPi.GPIO as GPIO
 import picamera
 import local_settings as l
 import telepot
+import atexit
 
 def init():
     GPIO.setmode(GPIO.BCM)
@@ -30,6 +31,11 @@ def snap(bot):
     f.close()
     return
 
+def tear_down():
+    GPIO.cleanup()
+    return
+
+atexit.register(tear_down)
 
 if __name__ == "__main__":
     GPIO.setmode(GPIO.BCM)
@@ -38,4 +44,3 @@ if __name__ == "__main__":
     while True:
         GPIO.wait_for_edge(23, GPIO.RISING)
         snap(bot)
-        GPIO.cleanup()
