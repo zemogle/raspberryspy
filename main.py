@@ -32,7 +32,9 @@ def snap(bot):
 
 
 if __name__ == "__main__":
-    bot = init()
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setup(23, GPIO.IN, pull_up_down = GPIO.PUD_DOWN)
+    bot = telepot.Bot(l.telegram['token'])
     while True:
         GPIO.wait_for_edge(23, GPIO.RISING)
         snap(bot)
