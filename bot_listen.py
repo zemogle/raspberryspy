@@ -7,16 +7,13 @@ import local_settings as l
 
 def handle(msg):
     content_type, chat_type, chat_id = telepot.glance(msg)
-    print(content_type, chat_type, chat_id)
-
     if content_type == 'text':
-        bot.sendMessage(chat_id, msg['text'])
+        bot.sendMessage(chat_id, 'Is there anyone there?')
         m.snap(bot)
 
 if __name__ == "__main__":
     bot = telepot.Bot(l.telegram['token'])
     bot.message_loop(handle)
-    print ('Listening ...')
 
     # Keep the program running.
     while 1:
