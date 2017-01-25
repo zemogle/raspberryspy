@@ -21,9 +21,8 @@ def snap(bot):
     with picamera.PiCamera() as camera:
         camera.led = False
         camera.resolution = (400,300)
-        camera.rotation = 90
         # Camera warm-up time
-        time.sleep(2)
+        time.sleep(1)
         camera.capture(my_file)
     my_file.close()
     f = open(full_file,'r')
