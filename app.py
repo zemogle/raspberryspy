@@ -8,7 +8,7 @@ from gpiozero import Button, MotionSensor
 from picamera import PiCamera
 from time import sleep
 from signal import pause
-from urllib3 import http
+import urllib3
 
 # Set up the Telegram bot
 bot = telepot.Bot(l.telegram['token'])
