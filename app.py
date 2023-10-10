@@ -22,6 +22,7 @@ camera = PiCamera()
 #start the camera
 camera.rotation = 180
 camera.start_preview()
+camera.exposure_mode = 'night'
 
 #image image names
 i = 0
@@ -38,14 +39,13 @@ def stop_camera():
 #take photo when motion is detected
 def take_photo():
     global i
-    i = i + 1
-    filename = '/home/pi/ratcam/image_%s.jpg' % i
+    filename = '/home/pi/ratcam/image.jpg'
     camera.capture(filename)
     print('A photo has been taken')
     #resp = http.request("POST", "https://ntfy.sh/rat-catcher-pemberley")
     with open(filename,'rb') as f:
         bot.sendPhoto(l.telegram['to_user_id'], f)
-    sleep(5)
+    sleep(15)
 
 if __name__ == '__main__':
     #assign a function that runs when the button is pressed
