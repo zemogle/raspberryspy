@@ -42,7 +42,7 @@ def take_photo():
     filename = '/home/pi/ratcam/image_%s.jpg' % i
     camera.capture(filename)
     print('A photo has been taken')
-    resp = http.request("POST", "https://ntfy.sh/rat-catcher-pemberley")
+    #resp = http.request("POST", "https://ntfy.sh/rat-catcher-pemberley")
     with open(filename,'rb') as f:
         bot.sendPhoto(l.telegram['to_user_id'], f)
     sleep(5)
